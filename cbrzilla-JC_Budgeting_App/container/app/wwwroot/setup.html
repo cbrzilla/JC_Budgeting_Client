@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Server Setup</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0f1718;
+            --panel: #182326;
+            --panel-2: #213138;
+            --border: #35515c;
+            --text: #eef5f7;
+            --muted: #b5c8cf;
+            --accent: #27c28a;
+            --accent-2: #1f9f71;
+            --danger: #ff8f8f;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(39,194,138,.16), transparent 35%),
+                linear-gradient(180deg, #0d1415 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .hero, .panel {
+            background: linear-gradient(180deg, rgba(38,53,58,.96), rgba(24,35,38,.97));
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 18px 48px rgba(0,0,0,.28);
+        }
+
+        .hero {
+            padding: 26px 28px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .hero-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            flex: 0 0 auto;
+            box-shadow: 0 10px 24px rgba(0,0,0,.24);
+        }
+
+        .hero-copy {
+            min-width: 0;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            line-height: 1.1;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .panel {
+            padding: 24px 24px 28px;
+        }
+
+        .status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .status-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 14px 16px;
+        }
+
+        .status-card strong {
+            display: block;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .status-card > div {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .ok { color: #9ae6b4; }
+        .warn { color: #ffd28f; }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid #5b7782;
+            border-radius: 12px;
+            background: rgba(8, 15, 16, .55);
+            color: var(--text);
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        .hint {
+            margin-top: -4px;
+            font-size: .92rem;
+            color: var(--muted);
+        }
+
+        .hint code {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            color: #081312;
+        }
+
+        .secondary {
+            background: rgba(255,255,255,.08);
+            color: var(--text);
+        }
+
+        #message {
+            min-height: 24px;
+            font-weight: 600;
+        }
+
+        #message.error { color: var(--danger); }
+        #message.success { color: #9ae6b4; }
+
+        code {
+            background: rgba(255,255,255,.06);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-family: Consolas, monospace;
+        }
+
+        @media (max-width: 720px) {
+            .hero {
+                align-items: flex-start;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <img class="hero-logo" src="/jcb.ico" alt="JCBudgeting logo">
+            <div class="hero-copy">
+                <h1>Server Setup</h1>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="status" id="statusCards"></div>
+
+            <form id="configForm">
+                <label>
+                    Database
+                    <select id="databasePath"></select>
+                </label>
+
+                <div class="actions" style="margin-top:0;">
+                    <button class="secondary" type="button" id="createDatabaseButton">Create New Database</button>
+                </div>
+
+                <div class="hint">Server databases are stored in the server <code>Databases</code> folder. Uploaded databases keep their source file name when possible, and duplicates get a timestamp suffix automatically.</div>
+
+                <div class="row">
+                    <label>
+                        Budget Period
+                        <select id="budgetPeriod">
+                            <option value="Monthly">Monthly</option>
+                            <option value="Bi-Weekly">Bi-Weekly</option>
+                            <option value="Weekly">Weekly</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Budget Start Date
+                        <input id="budgetStartDate" type="text" placeholder="04/09/2026">
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label>
+                        Budget Years
+                        <input id="budgetYears" type="number" min="1" max="100" step="1">
+                    </label>
+
+                    <label>
+                        Access Mode
+                        <select id="accessMode">
+                            <option value="local">This computer only</option>
+                            <option value="network">Allow other devices on this network</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label>
+                        Port
+                        <input id="serverPort" type="number" min="1" max="65535" step="1" placeholder="5099">
+                    </label>
+                </div>
+
+                <div class="hint">The setup page will translate these choices into the server bind address automatically. On the same machine, open the site with <code>http://localhost:&lt;port&gt;</code>. For other devices, use that computer&apos;s local network IP and the same port.</div>
+
+                <div class="actions">
+                    <button class="primary" type="submit">Save Config</button>
+                    <button class="secondary" type="button" id="refreshButton">Refresh Status</button>
+                    <a class="secondary" style="text-decoration:none;display:inline-flex;align-items:center;" href="/api/health" target="_blank" rel="noreferrer">Open Health</a>
+                </div>
+
+                <div id="message"></div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        const form = document.getElementById("configForm");
+        const message = document.getElementById("message");
+        const statusCards = document.getElementById("statusCards");
+        const createDatabaseButton = document.getElementById("createDatabaseButton");
+        const databasePathSelect = document.getElementById("databasePath");
+
+        function parseUrls(urls) {
+            const raw = (urls || "").trim();
+            const match = raw.match(/:(\d+)\s*$/);
+            const port = match ? Number(match[1]) : 5099;
+            const normalized = raw.toLowerCase();
+            const accessMode =
+                normalized.includes("0.0.0.0") || normalized.includes("[::]") || normalized.includes("localhost")
+                    ? (normalized.includes("0.0.0.0") || normalized.includes("[::]") ? "network" : "local")
+                    : "local";
+
+            return { accessMode, port };
+        }
+
+        function buildUrls(accessMode, port) {
+            const safePort = Number.isFinite(port) && port > 0 ? port : 5099;
+            return accessMode === "network"
+                ? `http://0.0.0.0:${safePort}`
+                : `http://127.0.0.1:${safePort}`;
+        }
+
+        function updateDatabaseOptions(data) {
+            const databases = Array.isArray(data?.databases) ? data.databases : [];
+            const currentPath = data?.databasePath || "";
+            databasePathSelect.innerHTML = "";
+
+            if (!databases.length) {
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No databases found yet";
+                databasePathSelect.appendChild(option);
+                return;
+            }
+
+            const createOption = document.createElement("option");
+            createOption.value = "";
+            createOption.textContent = "Create a new database in the Databases folder";
+            if (!currentPath) {
+                createOption.selected = true;
+            }
+            databasePathSelect.appendChild(createOption);
+
+            for (const db of databases) {
+                const option = document.createElement("option");
+                option.value = db.path || "";
+                option.textContent = db.name || db.path || "(unnamed database)";
+                if ((db.path || "") === currentPath) {
+                    option.selected = true;
+                }
+                databasePathSelect.appendChild(option);
+            }
+        }
+
+        function applyConfigFields(data) {
+            updateDatabaseOptions(data);
+            document.getElementById("budgetPeriod").value = data.budgetPeriod || "Monthly";
+            document.getElementById("budgetStartDate").value = data.budgetStartDate || "";
+            document.getElementById("budgetYears").value = data.budgetYears || 20;
+            const parsed = parseUrls(data.urls || "http://0.0.0.0:5099");
+            document.getElementById("accessMode").value = parsed.accessMode;
+            document.getElementById("serverPort").value = parsed.port || 5099;
+        }
+
+        function getPayload() {
+            const accessMode = document.getElementById("accessMode").value;
+            const port = Number(document.getElementById("serverPort").value || "5099");
+            return {
+                databasePath: databasePathSelect.value || "",
+                budgetPeriod: document.getElementById("budgetPeriod").value,
+                budgetStartDate: document.getElementById("budgetStartDate").value.trim(),
+                budgetYears: Number(document.getElementById("budgetYears").value || "20"),
+                urls: buildUrls(accessMode, port)
+            };
+        }
+
+        function setMessage(text, kind) {
+            message.textContent = text || "";
+            message.className = kind ? kind : "";
+        }
+
+        function buildAccessHint(data, fallbackUrls) {
+            const accessUrls = Array.isArray(data?.accessUrls) ? data.accessUrls.filter(Boolean) : [];
+            if (accessUrls.length > 0) {
+                return ` Use one of these addresses from mobile or the client app: ${accessUrls.join("  |  ")}.`;
+            }
+
+            const parsed = parseUrls(data?.urls || fallbackUrls || "");
+            return ` Use http://localhost:${parsed.port} on this machine, or that machine's local IP on port ${parsed.port} from mobile or the client app.`;
+        }
+
+        function renderStatus(data) {
+            const cards = [
+                ["Config File", data.configFileExists ? "Present" : "Not saved yet", data.configFileExists],
+                ["Database", data.databaseExists ? "Found" : "Missing", data.databaseExists],
+                ["Config Path", data.configPath || "n/a", true],
+                ["Server URLs", data.urls || "n/a", true]
+            ];
+
+            statusCards.innerHTML = cards.map(([label, value, ok]) => `
+                <div class="status-card">
+                    <strong>${label}</strong>
+                    <div class="${ok ? "ok" : "warn"}">${value}</div>
+                </div>
+            `).join("");
+        }
+
+        async function loadConfig() {
+            setMessage("", "");
+            const response = await fetch("/api/server-config", { cache: "no-store" });
+            const data = await response.json();
+
+            applyConfigFields(data);
+            renderStatus(data);
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            setMessage("Saving configuration...", "");
+
+            const payload = getPayload();
+
+            const response = await fetch("/api/server-config", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                setMessage(data.error || "Could not save server configuration.", "error");
+                return;
+            }
+
+            applyConfigFields(payload);
+            const browserHint = buildAccessHint(data, payload.urls);
+            setMessage((data.message || "Saved server configuration.") + browserHint, "success");
+            setTimeout(() => {
+                loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+            }, 400);
+        });
+
+        createDatabaseButton.addEventListener("click", async () => {
+            const payload = getPayload();
+            setMessage("Creating a new database from the blank template...", "");
+
+            const response = await fetch("/api/server-config/create-database", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                setMessage(data.error || "Could not create the new database.", "error");
+                return;
+            }
+
+            applyConfigFields({
+                ...payload,
+                databasePath: data.databasePath || payload.databasePath,
+                urls: data.urls || payload.urls
+            });
+            const browserHint = buildAccessHint(data, payload.urls);
+            setMessage((data.message || "Created a new database.") + browserHint, "success");
+            setTimeout(() => {
+                loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+            }, 400);
+        });
+
+        document.getElementById("refreshButton").addEventListener("click", loadConfig);
+        loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+    </script>
+</body>
+</html>
