@@ -5,10 +5,13 @@ name: JC Budgeting Server
 version: "0.9.0-test"
 tagline: Host a JCBudgeting database on Umbrel
 description: >-
-  JC Budgeting Server hosts a JCBudgeting database so the desktop client,
+  JC Budgeting Server hosts a JCBudgeting database so desktop clients,
   phones, and other devices on your network can connect to the same budget.
   Use the built-in setup page to create or select the active database, then
   connect your clients to your Umbrel device on port 5099.
+
+  For more information, visit: https://github.com/cbrzilla/JC_Budgeting_App
+
 releaseNotes: "Initial Umbrel app-store test package."
 developer: Cliff Flanders
 website: https://github.com/cbrzilla/JC_Budgeting_App
