@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.9.0-test</Version>
+    <AssemblyVersion>0.9.0.0</AssemblyVersion>
+    <FileVersion>0.9.0.0</FileVersion>
+    <InformationalVersion>0.9.0-test</InformationalVersion>
+    <Company>JCBudgeting</Company>
+    <Product>JCBudgeting</Product>
+    <Authors>Cliff</Authors>
+    <Copyright>Copyright &#169; 2026 Cliff Flanders</Copyright>
+  </PropertyGroup>
+</Project>
