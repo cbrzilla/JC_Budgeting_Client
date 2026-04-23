@@ -44,4 +44,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/cbrzilla/jc-budgeting-server-umbrel:latest
-            ghcr.io/cbrzilla/jc-budgeting-server-umbrel:0.9.0-test
+            ghcr.io/cbrzilla/jc-budgeting-server-umbrel:0.9.1-test

@@ -16,6 +16,9 @@
             --accent: #27c28a;
             --accent-2: #1f9f71;
             --danger: #ff8f8f;
+            --console: #081011;
+            --console-border: #294149;
+            --console-text: #cde4db;
         }
 
         * { box-sizing: border-box; }
@@ -31,7 +34,7 @@
         }
 
         .wrap {
-            max-width: 920px;
+            max-width: 1080px;
             margin: 0 auto;
             padding: 32px 20px 48px;
         }
@@ -63,20 +66,48 @@
             min-width: 0;
         }
 
+        h1, h2, h3, p, pre {
+            margin: 0;
+        }
+
         h1 {
-            margin: 0 0 8px;
             font-size: 2rem;
             line-height: 1.1;
         }
 
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+
+        h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
         p {
-            margin: 0;
             color: var(--muted);
             line-height: 1.5;
         }
 
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+            gap: 22px;
+        }
+
+        .layout > * {
+            min-width: 0;
+        }
+
         .panel {
             padding: 24px 24px 28px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 22px;
+            min-width: 0;
         }
 
         .status {
@@ -144,9 +175,13 @@
             color: var(--muted);
         }
 
-        .hint code {
+        .hint code, code {
             overflow-wrap: anywhere;
             word-break: break-word;
+            background: rgba(255,255,255,.06);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-family: Consolas, monospace;
         }
 
         .actions {
@@ -157,13 +192,19 @@
             margin-top: 8px;
         }
 
-        button {
+        button, .button-link {
             border: 0;
             border-radius: 12px;
             padding: 12px 18px;
             font: inherit;
             font-weight: 700;
             cursor: pointer;
+        }
+
+        .button-link {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
         .primary {
@@ -184,11 +225,108 @@
         #message.error { color: var(--danger); }
         #message.success { color: #9ae6b4; }
 
-        code {
-            background: rgba(255,255,255,.06);
-            border-radius: 6px;
-            padding: 2px 6px;
-            font-family: Consolas, monospace;
+        .runtime-panel {
+            display: grid;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        .runtime-links {
+            display: grid;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .runtime-link-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 14px 16px;
+            min-width: 0;
+        }
+
+        .runtime-link-card strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: .8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .runtime-link-card a {
+            color: #9ae6b4;
+            overflow-wrap: anywhere;
+            word-break: break-all;
+        }
+
+        .runtime-link-card div,
+        #logFileHost,
+        #primaryAccessHost,
+        #setupAddressHost {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .console-meta {
+            color: var(--muted);
+            font-size: .88rem;
+        }
+
+        .console-window {
+            border-radius: 18px;
+            border: 1px solid var(--console-border);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%),
+                var(--console);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,.04);
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .console-title {
+            font-weight: 700;
+        }
+
+        .console-body {
+            min-height: 360px;
+            max-height: 560px;
+            overflow: auto;
+            padding: 14px;
+            color: var(--console-text);
+            font: 13px/1.5 Consolas, "Cascadia Mono", monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .copyright-block {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            color: var(--muted);
+            line-height: 1.65;
+            font-size: .95rem;
+        }
+
+        .copyright-block a {
+            color: #9ae6b4;
+            word-break: break-all;
+        }
+
+        @media (max-width: 920px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 720px) {
@@ -208,73 +346,122 @@
             <img class="hero-logo" src="/jcb.ico" alt="JCBudgeting logo">
             <div class="hero-copy">
                 <h1>Server Setup</h1>
+                <p>Configure the JC Budgeting Server, confirm the address other devices should use, and watch the live server log output in one place.</p>
             </div>
         </section>
 
-        <section class="panel">
-            <div class="status" id="statusCards"></div>
+        <div class="layout">
+            <div class="stack">
+                <section class="panel">
+                    <div class="status" id="statusCards"></div>
 
-            <form id="configForm">
-                <label>
-                    Database
-                    <select id="databasePath"></select>
-                </label>
+                    <form id="configForm">
+                        <label>
+                            Database
+                            <select id="databasePath"></select>
+                        </label>
 
-                <div class="actions" style="margin-top:0;">
-                    <button class="secondary" type="button" id="createDatabaseButton">Create New Database</button>
+                        <div class="actions" style="margin-top:0;">
+                            <button class="secondary" type="button" id="createDatabaseButton">Create New Database</button>
+                        </div>
+
+                        <div class="hint">Server databases are stored in the server <code>Databases</code> folder. Uploaded databases keep their source file name when possible, and duplicates get a timestamp suffix automatically.</div>
+
+                        <div class="row">
+                            <label>
+                                Budget Period
+                                <select id="budgetPeriod">
+                                    <option value="Monthly">Monthly</option>
+                                    <option value="Bi-Weekly">Bi-Weekly</option>
+                                    <option value="Weekly">Weekly</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Budget Start Date
+                                <input id="budgetStartDate" type="text" placeholder="04/09/2026">
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <label>
+                                Budget Years
+                                <input id="budgetYears" type="number" min="1" max="100" step="1">
+                            </label>
+
+                            <label>
+                                Access Mode
+                                <select id="accessMode">
+                                    <option value="local">This computer only</option>
+                                    <option value="network">Allow other devices on this network</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <label>
+                                Port
+                                <input id="serverPort" type="number" min="1" max="65535" step="1" placeholder="5099">
+                            </label>
+                        </div>
+
+                        <div class="hint">On Umbrel or another shared server, the <strong>Primary Access Address</strong> is the address your JC Budgeting client should use instead of <code>localhost</code>.</div>
+
+                        <div class="actions">
+                            <button class="primary" type="submit">Save Config</button>
+                            <button class="secondary" type="button" id="refreshButton">Refresh Status</button>
+                            <button class="secondary" type="button" id="refreshLogsButton">Refresh Logs</button>
+                            <a class="button-link secondary" href="/api/health" target="_blank" rel="noreferrer">Open Health</a>
+                        </div>
+
+                        <div id="message"></div>
+                    </form>
+                </section>
+
+                <section class="panel">
+                    <h2>Copyright Notice</h2>
+                    <div class="copyright-block">
+                        <div>Copyright (c) 2026 Cliff Flanders</div>
+                        <div>All rights reserved.</div>
+                        <div>This software is proprietary and confidential.</div>
+                        <div>You may not modify or reverse engineer this software without explicit permission from the author.</div>
+                        <div>This software is provided "as is", without warranty of any kind.</div>
+                        <div>This software is for personal use only and must not be used for commercial purposes.</div>
+                        <div style="margin-top: 14px;">For more information, visit: <a href="https://github.com/cbrzilla/JC_Budgeting_App" target="_blank" rel="noreferrer">https://github.com/cbrzilla/JC_Budgeting_App</a></div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="panel runtime-panel">
+                <div>
+                    <h2>Server Runtime</h2>
+                    <p class="console-meta">This window shows the same file-based server log stream used for debugging packaged deployments.</p>
                 </div>
 
-                <div class="hint">Server databases are stored in the server <code>Databases</code> folder. Uploaded databases keep their source file name when possible, and duplicates get a timestamp suffix automatically.</div>
-
-                <div class="row">
-                    <label>
-                        Budget Period
-                        <select id="budgetPeriod">
-                            <option value="Monthly">Monthly</option>
-                            <option value="Bi-Weekly">Bi-Weekly</option>
-                            <option value="Weekly">Weekly</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        Budget Start Date
-                        <input id="budgetStartDate" type="text" placeholder="04/09/2026">
-                    </label>
+                <div class="runtime-links">
+                    <div class="runtime-link-card">
+                        <strong>Primary Access Address</strong>
+                        <div id="primaryAccessHost">Loading...</div>
+                    </div>
+                    <div class="runtime-link-card">
+                        <strong>Setup Page Address</strong>
+                        <div id="setupAddressHost">Loading...</div>
+                    </div>
+                    <div class="runtime-link-card">
+                        <strong>Log File</strong>
+                        <div id="logFileHost">Loading...</div>
+                    </div>
                 </div>
 
-                <div class="row">
-                    <label>
-                        Budget Years
-                        <input id="budgetYears" type="number" min="1" max="100" step="1">
-                    </label>
-
-                    <label>
-                        Access Mode
-                        <select id="accessMode">
-                            <option value="local">This computer only</option>
-                            <option value="network">Allow other devices on this network</option>
-                        </select>
-                    </label>
+                <div class="console-window">
+                    <div class="console-header">
+                        <div class="console-title">Server Log</div>
+                        <div class="console-meta" id="logUpdatedAt">Waiting for log data...</div>
+                    </div>
+                    <pre class="console-body" id="logConsole">Loading server logs...</pre>
                 </div>
-
-                <div class="row">
-                    <label>
-                        Port
-                        <input id="serverPort" type="number" min="1" max="65535" step="1" placeholder="5099">
-                    </label>
-                </div>
-
-                <div class="hint">The setup page will translate these choices into the server bind address automatically. On the same machine, open the site with <code>http://localhost:&lt;port&gt;</code>. For other devices, use that computer&apos;s local network IP and the same port.</div>
-
-                <div class="actions">
-                    <button class="primary" type="submit">Save Config</button>
-                    <button class="secondary" type="button" id="refreshButton">Refresh Status</button>
-                    <a class="secondary" style="text-decoration:none;display:inline-flex;align-items:center;" href="/api/health" target="_blank" rel="noreferrer">Open Health</a>
-                </div>
-
-                <div id="message"></div>
-            </form>
-        </section>
+            </section>
+        </div>
     </div>
 
     <script>
@@ -283,6 +470,14 @@
         const statusCards = document.getElementById("statusCards");
         const createDatabaseButton = document.getElementById("createDatabaseButton");
         const databasePathSelect = document.getElementById("databasePath");
+        const refreshLogsButton = document.getElementById("refreshLogsButton");
+        const primaryAccessHost = document.getElementById("primaryAccessHost");
+        const setupAddressHost = document.getElementById("setupAddressHost");
+        const logFileHost = document.getElementById("logFileHost");
+        const logConsole = document.getElementById("logConsole");
+        const logUpdatedAt = document.getElementById("logUpdatedAt");
+
+        let configState = null;
 
         function parseUrls(urls) {
             const raw = (urls || "").trim();
@@ -302,6 +497,14 @@
             return accessMode === "network"
                 ? `http://0.0.0.0:${safePort}`
                 : `http://127.0.0.1:${safePort}`;
+        }
+
+        function asLink(url) {
+            if (!url) {
+                return "Unavailable";
+            }
+
+            return `<a href="${url}" target="_blank" rel="noreferrer">${url}</a>`;
         }
 
         function updateDatabaseOptions(data) {
@@ -337,6 +540,7 @@
         }
 
         function applyConfigFields(data) {
+            configState = data || {};
             updateDatabaseOptions(data);
             document.getElementById("budgetPeriod").value = data.budgetPeriod || "Monthly";
             document.getElementById("budgetStartDate").value = data.budgetStartDate || "";
@@ -344,6 +548,9 @@
             const parsed = parseUrls(data.urls || "http://0.0.0.0:5099");
             document.getElementById("accessMode").value = parsed.accessMode;
             document.getElementById("serverPort").value = parsed.port || 5099;
+
+            primaryAccessHost.innerHTML = asLink(data.primaryAccessUrl);
+            setupAddressHost.innerHTML = asLink(data.setupUrl);
         }
 
         function getPayload() {
@@ -364,21 +571,25 @@
         }
 
         function buildAccessHint(data, fallbackUrls) {
-            const accessUrls = Array.isArray(data?.accessUrls) ? data.accessUrls.filter(Boolean) : [];
-            if (accessUrls.length > 0) {
-                return ` Use one of these addresses from mobile or the client app: ${accessUrls.join("  |  ")}.`;
+            const primaryAccess = data?.primaryAccessUrl || "";
+            const setupUrl = data?.setupUrl || "";
+            if (primaryAccess) {
+                const setupText = setupUrl ? ` Setup page: ${setupUrl}.` : "";
+                return ` Client access: ${primaryAccess}.${setupText}`;
             }
 
             const parsed = parseUrls(data?.urls || fallbackUrls || "");
-            return ` Use http://localhost:${parsed.port} on this machine, or that machine's local IP on port ${parsed.port} from mobile or the client app.`;
+            return ` Use port ${parsed.port} on this machine's reachable IP address.`;
         }
 
         function renderStatus(data) {
             const cards = [
                 ["Config File", data.configFileExists ? "Present" : "Not saved yet", data.configFileExists],
                 ["Database", data.databaseExists ? "Found" : "Missing", data.databaseExists],
-                ["Config Path", data.configPath || "n/a", true],
-                ["Server URLs", data.urls || "n/a", true]
+                ["Current Database", data.databasePath || "(none configured)", !!data.databasePath],
+                ["Primary Access", data.primaryAccessUrl || "Unavailable", !!data.primaryAccessUrl],
+                ["Setup Page", data.setupUrl || "Unavailable", !!data.setupUrl],
+                ["Server Bind URL", data.urls || "n/a", true]
             ];
 
             statusCards.innerHTML = cards.map(([label, value, ok]) => `
@@ -387,6 +598,20 @@
                     <div class="${ok ? "ok" : "warn"}">${value}</div>
                 </div>
             `).join("");
+        }
+
+        async function loadRuntime() {
+            const response = await fetch("/api/server-runtime?lines=180", { cache: "no-store" });
+            const data = await response.json();
+
+            primaryAccessHost.innerHTML = asLink(data.primaryAccessUrl || configState?.primaryAccessUrl);
+            setupAddressHost.innerHTML = asLink(data.setupUrl || configState?.setupUrl);
+            logFileHost.textContent = data.logFilePath || "Unavailable";
+            logConsole.textContent = Array.isArray(data.logLines) && data.logLines.length
+                ? data.logLines.join("\n")
+                : "No log output available yet.";
+            logConsole.scrollTop = logConsole.scrollHeight;
+            logUpdatedAt.textContent = `Updated ${new Date().toLocaleTimeString()}`;
         }
 
         async function loadConfig() {
@@ -416,11 +641,10 @@
                 return;
             }
 
-            applyConfigFields(payload);
             const browserHint = buildAccessHint(data, payload.urls);
             setMessage((data.message || "Saved server configuration.") + browserHint, "success");
             setTimeout(() => {
-                loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+                Promise.all([loadConfig(), loadRuntime()]).catch(error => setMessage(error.message || "Could not refresh server configuration.", "error"));
             }, 400);
         });
 
@@ -440,20 +664,25 @@
                 return;
             }
 
-            applyConfigFields({
-                ...payload,
-                databasePath: data.databasePath || payload.databasePath,
-                urls: data.urls || payload.urls
-            });
             const browserHint = buildAccessHint(data, payload.urls);
             setMessage((data.message || "Created a new database.") + browserHint, "success");
             setTimeout(() => {
-                loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+                Promise.all([loadConfig(), loadRuntime()]).catch(error => setMessage(error.message || "Could not refresh server configuration.", "error"));
             }, 400);
         });
 
-        document.getElementById("refreshButton").addEventListener("click", loadConfig);
-        loadConfig().catch(error => setMessage(error.message || "Could not load server configuration.", "error"));
+        document.getElementById("refreshButton").addEventListener("click", () => {
+            Promise.all([loadConfig(), loadRuntime()]).catch(error => setMessage(error.message || "Could not refresh server configuration.", "error"));
+        });
+
+        refreshLogsButton.addEventListener("click", () => {
+            loadRuntime().catch(error => setMessage(error.message || "Could not refresh server logs.", "error"));
+        });
+
+        Promise.all([loadConfig(), loadRuntime()]).catch(error => setMessage(error.message || "Could not load server setup.", "error"));
+        window.setInterval(() => {
+            loadRuntime().catch(() => {});
+        }, 4000);
     </script>
 </body>
 </html>
