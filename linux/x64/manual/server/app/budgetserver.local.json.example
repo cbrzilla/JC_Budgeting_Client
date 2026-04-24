@@ -1,0 +1,10 @@
+{
+  "Urls": "http://0.0.0.0:5099",
+  "BudgetServer": {
+    "DatabasePath": "C:\\Path\\To\\Your\\Budget.jcbdb",
+    "SettingsPath": "",
+    "BudgetPeriod": "Monthly",
+    "BudgetStartDate": "04/09/2026",
+    "BudgetYears": 20
+  }
+}

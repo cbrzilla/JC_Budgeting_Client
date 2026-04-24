@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JCBudgeting Mobile Budget</title>
+    <link rel="stylesheet" href="/styles.css?v=20260413b" />
+</head>
+<body>
+    <main class="app-shell">
+        <header class="hero">
+            <div class="hero-brand">
+                <img class="hero-logo" src="/jcb.ico" alt="JCBudgeting logo" />
+                <div>
+                    <div class="hero-title-row">
+                        <h1>Mobile</h1>
+                        <button id="refreshButton" class="action-button hero-refresh-button" type="button">Refresh</button>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <div class="hero-period-picker">
+                    <select id="periodSelect" class="period-select"></select>
+                </div>
+            </div>
+        </header>
+
+        <div id="statusBanner" class="sr-only" aria-live="polite">Loading data...</div>
+
+        <section class="page-section active" data-page="summary">
+            <section class="metric-grid" id="metricGrid">
+                <article class="metric-card income">
+                    <span class="metric-label">Income</span>
+                    <strong id="incomeTotal" class="metric-value">$0.00</strong>
+                </article>
+                <article class="metric-card outflow">
+                    <span class="metric-label">Planned Outflow</span>
+                    <strong id="plannedOutflow" class="metric-value">$0.00</strong>
+                </article>
+                <article class="metric-card savings">
+                    <span class="metric-label">Savings</span>
+                    <strong id="savingsTotal" class="metric-value">$0.00</strong>
+                </article>
+                <article class="metric-card debt">
+                    <span class="metric-label">Debt Balance</span>
+                    <strong id="debtBalance" class="metric-value">$0.00</strong>
+                </article>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Outgoing Breakdown</h2>
+                </div>
+                <div id="summaryBreakdownChart" class="summary-breakdown-chart"></div>
+            </section>
+        </section>
+
+        <section class="page-section" data-page="budget">
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Period Budget</h2>
+                </div>
+                <div id="budgetItemsHost" class="budget-sections"></div>
+            </section>
+        </section>
+
+        <section class="page-section" data-page="balances">
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Accounts</h2>
+                    <span id="accountCount" class="count-pill">0</span>
+                </div>
+                <div id="accountsList" class="card-list"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Savings</h2>
+                    <span id="savingsCount" class="count-pill">0</span>
+                </div>
+                <div id="savingsList" class="card-list"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Debts</h2>
+                    <span id="debtsCount" class="count-pill">0</span>
+                </div>
+                <div id="debtsList" class="card-list"></div>
+            </section>
+        </section>
+
+        <section class="page-section" data-page="transactions">
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Recent Transactions</h2>
+                    <span id="transactionsCount" class="count-pill">0</span>
+                </div>
+                <div id="transactionsList" class="transaction-list"></div>
+            </section>
+        </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Mobile sections">
+        <button class="bottom-nav-button active" type="button" data-nav-page="summary">Summary</button>
+        <button class="bottom-nav-button" type="button" data-nav-page="budget">Budget</button>
+        <button class="bottom-nav-button" type="button" data-nav-page="balances">Balances</button>
+        <button class="bottom-nav-button" type="button" data-nav-page="transactions">Transactions</button>
+    </nav>
+
+    <noscript>
+        <div style="padding:16px;color:#c85a5a;font-weight:600;">JavaScript is required to load the mobile summary.</div>
+    </noscript>
+    <script src="/app.js?v=20260413b"></script>
+</body>
+</html>

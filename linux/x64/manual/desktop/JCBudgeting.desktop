@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=JC Budgeting
+GenericName=Budget Planner
+X-GNOME-FullName=JC Budgeting
+Comment=JC Budgeting Desktop
+Exec=$HOME/.local/share/jcbudgeting/JCBudgeting
+Path=$HOME/.local/share/jcbudgeting
+Icon=$HOME/.local/share/icons/hicolor/256x256/apps/jcbudgeting.png
+Terminal=false
+Categories=Office;Finance;
+Keywords=budget;budgeting;finance;money;
+StartupNotify=true
+StartupWMClass=JCBudgeting

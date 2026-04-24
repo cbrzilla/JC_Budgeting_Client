@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JC Server Page</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0f1718;
+            --panel: #182326;
+            --border: #35515c;
+            --text: #eef5f7;
+            --muted: #b5c8cf;
+            --accent: #27c28a;
+            --accent-2: #1f9f71;
+            --danger: #ff8f8f;
+            --console: #081011;
+            --console-border: #294149;
+            --console-text: #cde4db;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(39,194,138,.16), transparent 35%),
+                linear-gradient(180deg, #0d1415 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .hero, .panel {
+            background: linear-gradient(180deg, rgba(38,53,58,.96), rgba(24,35,38,.97));
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            box-shadow: 0 18px 48px rgba(0,0,0,.28);
+        }
+
+        .hero {
+            padding: 26px 28px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .hero-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            flex: 0 0 auto;
+            box-shadow: 0 10px 24px rgba(0,0,0,.24);
+        }
+
+        h1, h2, p, pre {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .panel {
+            padding: 24px 24px 28px;
+        }
+
+        .status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .status-card {
+            background: rgba(255,255,255,.03);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 14px 16px;
+            min-width: 0;
+        }
+
+        .status-card strong {
+            display: block;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .status-card div,
+        .status-card a {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .status-card a,
+        .link {
+            color: #9ae6b4;
+        }
+
+        .ok { color: #9ae6b4; }
+        .warn { color: #ffd28f; }
+
+        form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid #5b7782;
+            border-radius: 12px;
+            background: rgba(8, 15, 16, .55);
+            color: var(--text);
+            padding: 12px 14px;
+            font: inherit;
+        }
+
+        .hint {
+            margin-top: -4px;
+            font-size: .92rem;
+            color: var(--muted);
+        }
+
+        .hint code, code {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            background: rgba(255,255,255,.06);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-family: Consolas, monospace;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            color: #081312;
+        }
+
+        .secondary {
+            background: rgba(255,255,255,.08);
+            color: var(--text);
+        }
+
+        #message {
+            min-height: 24px;
+            font-weight: 600;
+        }
+
+        #message.error { color: var(--danger); }
+        #message.success { color: #9ae6b4; }
+
+        .section {
+            margin-top: 28px;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .toggle-row input {
+            width: auto;
+            margin-top: 4px;
+        }
+
+        .toggle-text {
+            display: grid;
+            gap: 4px;
+        }
+
+        .console-window {
+            border-radius: 18px;
+            border: 1px solid var(--console-border);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%),
+                var(--console);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,.04);
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .console-title {
+            font-weight: 700;
+        }
+
+        .console-meta {
+            color: var(--muted);
+            font-size: .88rem;
+            overflow-wrap: anywhere;
+        }
+
+        .console-body {
+            min-height: 360px;
+            max-height: 560px;
+            overflow: auto;
+            padding: 14px;
+            color: var(--console-text);
+            font: 13px/1.5 Consolas, "Cascadia Mono", monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .copyright-block {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: .95rem;
+        }
+
+        .copyright-block a {
+            color: #9ae6b4;
+            word-break: break-all;
+        }
+
+        @media (max-width: 720px) {
+            .hero {
+                align-items: flex-start;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="hero">
+            <img class="hero-logo" src="/jcb.ico" alt="JCBudgeting logo">
+            <div>
+                <h1>JC Server Page</h1>
+                <p>Configure the JC Budgeting Server, confirm the address other devices should use, and watch the live server log output in one place.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="status" id="statusCards"></div>
+
+            <form id="configForm">
+                <label>
+                    Database
+                    <select id="databasePath"></select>
+                </label>
+
+                <div class="actions" style="margin-top:0;">
+                    <button class="secondary" type="button" id="createDatabaseButton">Create New Database</button>
+                </div>
+
+                <div class="hint">Server databases are stored in the server <code>Databases</code> folder. Uploaded databases keep their source file name when possible, and duplicates get a timestamp suffix automatically.</div>
+
+                <div class="row">
+                    <label>
+                        Budget Period
+                        <select id="budgetPeriod">
+                            <option value="Monthly">Monthly</option>
+                            <option value="Bi-Weekly">Bi-Weekly</option>
+                            <option value="Weekly">Weekly</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        Budget Start Date
+                        <input id="budgetStartDate" type="text" placeholder="04/09/2026">
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label>
+                        Budget Years
+                        <input id="budgetYears" type="number" min="1" max="100" step="1">
+                    </label>
+
+                    <label>
+                        Port
+                        <input id="serverPort" type="number" min="1" max="65535" step="1" placeholder="5099">
+                    </label>
+                </div>
+
+                <div class="hint">Standalone JC Server always allows other devices on your network to connect. The <strong>Primary Access Address</strong> below is the address your JC Budgeting client should use.</div>
+
+                <div class="actions">
+                    <button class="primary" type="submit">Save Config</button>
+                    <button class="secondary" type="button" id="refreshButton">Refresh</button>
+                </div>
+
+                <div id="message"></div>
+            </form>
+
+            <div class="section">
+                <h2>Server Updates</h2>
+                <div class="status">
+                    <div class="status-card">
+                        <strong>Update Status</strong>
+                        <div id="serverUpdateStatus" class="warn">Not checked yet</div>
+                    </div>
+                    <div class="status-card">
+                        <strong>Client Downloads</strong>
+                        <div><a class="link" href="https://github.com/cbrzilla/JC_Budgeting_Client" target="_blank" rel="noreferrer">https://github.com/cbrzilla/JC_Budgeting_Client</a></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="secondary" type="button" id="checkServerUpdatesButton">Check Server Updates</button>
+                </div>
+            </div>
+
+            <div class="section" id="startupSection" style="display:none;">
+                <h2>Startup</h2>
+                <div class="status-card">
+                    <label class="toggle-row">
+                        <input id="startAtOsStartup" type="checkbox">
+                        <span class="toggle-text">
+                            <span>Start JC Budgeting Server when the OS starts</span>
+                            <span class="hint" id="startupStatusMessage">Checking startup support...</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Server Log</h2>
+                <div class="console-window">
+                    <div class="console-header">
+                        <div class="console-title">Live Server Log</div>
+                        <div class="console-meta" id="logUpdatedAt">Waiting for log data...</div>
+                    </div>
+                    <pre class="console-body" id="logConsole">Loading server logs...</pre>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Copyright Notice</h2>
+                <div class="copyright-block">
+                    <div>Copyright (c) 2026 Cliff Flanders</div>
+                    <div>All rights reserved.</div>
+                    <div>JC Budgeting is proprietary software.</div>
+                    <div>You may not modify or reverse engineer this software without explicit permission from the author.</div>
+                    <div>This software is provided "as is", without warranty of any kind.</div>
+                    <div>This software is for personal use only and must not be used for commercial purposes.</div>
+                    <div>This software includes third-party components that remain subject to their own license terms.</div>
+                    <div style="margin-top: 14px;">For more information, visit: <a href="https://github.com/cbrzilla/JC_Budgeting_Umbrel" target="_blank" rel="noreferrer">https://github.com/cbrzilla/JC_Budgeting_Umbrel</a></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const form = document.getElementById("configForm");
+        const message = document.getElementById("message");
+        const statusCards = document.getElementById("statusCards");
+        const createDatabaseButton = document.getElementById("createDatabaseButton");
+        const databasePathSelect = document.getElementById("databasePath");
+        const logConsole = document.getElementById("logConsole");
+        const logUpdatedAt = document.getElementById("logUpdatedAt");
+        const serverUpdateStatus = document.getElementById("serverUpdateStatus");
+        const checkServerUpdatesButton = document.getElementById("checkServerUpdatesButton");
+        const startupSection = document.getElementById("startupSection");
+        const startAtOsStartup = document.getElementById("startAtOsStartup");
+        const startupStatusMessage = document.getElementById("startupStatusMessage");
+
+        function parseUrls(urls) {
+            const raw = (urls || "").trim();
+            const match = raw.match(/:(\d+)\s*$/);
+            return { port: match ? Number(match[1]) : 5099 };
+        }
+
+        function buildUrls(port) {
+            const safePort = Number.isFinite(port) && port > 0 ? port : 5099;
+            return `http://0.0.0.0:${safePort}`;
+        }
+
+        function asLink(url) {
+            if (!url) {
+                return "Unavailable";
+            }
+
+            return `<a class="link" href="${url}" target="_blank" rel="noreferrer">${url}</a>`;
+        }
+
+        function updateDatabaseOptions(data) {
+            const databases = Array.isArray(data?.databases) ? data.databases : [];
+            const currentPath = data?.databasePath || "";
+            databasePathSelect.innerHTML = "";
+
+            if (!databases.length) {
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No databases found yet";
+                databasePathSelect.appendChild(option);
+                return;
+            }
+
+            const createOption = document.createElement("option");
+            createOption.value = "";
+            createOption.textContent = "Create a new database in the Databases folder";
+            if (!currentPath) {
+                createOption.selected = true;
+            }
+            databasePathSelect.appendChild(createOption);
+
+            for (const db of databases) {
+                const option = document.createElement("option");
+                option.value = db.path || "";
+                option.textContent = db.name || db.path || "(unnamed database)";
+                if ((db.path || "") === currentPath) {
+                    option.selected = true;
+                }
+                databasePathSelect.appendChild(option);
+            }
+        }
+
+        function applyConfigFields(data) {
+            updateDatabaseOptions(data);
+            document.getElementById("budgetPeriod").value = data.budgetPeriod || "Monthly";
+            document.getElementById("budgetStartDate").value = data.budgetStartDate || "";
+            document.getElementById("budgetYears").value = data.budgetYears || 20;
+            const parsed = parseUrls(data.urls || "http://0.0.0.0:5099");
+            document.getElementById("serverPort").value = parsed.port || 5099;
+        }
+
+        function getPayload() {
+            const port = Number(document.getElementById("serverPort").value || "5099");
+            return {
+                databasePath: databasePathSelect.value || "",
+                budgetPeriod: document.getElementById("budgetPeriod").value,
+                budgetStartDate: document.getElementById("budgetStartDate").value.trim(),
+                budgetYears: Number(document.getElementById("budgetYears").value || "20"),
+                urls: buildUrls(port)
+            };
+        }
+
+        function setMessage(text, kind) {
+            message.textContent = text || "";
+            message.className = kind ? kind : "";
+        }
+
+        function renderStatus(data, runtime) {
+            const cards = [
+                ["Config File", data.configFileExists ? "Present" : "Not saved yet", data.configFileExists],
+                ["Database", data.databaseExists ? "Found" : "Missing", data.databaseExists],
+                ["Current Database", data.databasePath || "(none configured)", !!data.databasePath],
+                ["Server Version", runtime?.serverVersion || "Unavailable", !!runtime?.serverVersion],
+                ["Primary Access", asLink(data.primaryAccessUrl), !!data.primaryAccessUrl, true],
+                ["Server Page", asLink(data.setupUrl), !!data.setupUrl, true],
+                ["Client Installation", '<a class="link" href="https://github.com/cbrzilla/JC_Budgeting_Client" target="_blank" rel="noreferrer">https://github.com/cbrzilla/JC_Budgeting_Client</a>', true, true],
+                ["Server Bind URL", data.urls || "n/a", true],
+                ["Log File", runtime?.logFilePath || "Unavailable", !!runtime?.logFilePath]
+            ];
+
+            statusCards.innerHTML = cards.map(([label, value, ok, isHtml]) => `
+                <div class="status-card">
+                    <strong>${label}</strong>
+                    <div class="${ok ? "ok" : "warn"}">${isHtml ? value : String(value)}</div>
+                </div>
+            `).join("");
+        }
+
+        async function fetchJson(url, options = {}) {
+            const response = await fetch(url, { cache: "no-store", ...options });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || `Request failed: ${response.status}`);
+            }
+            return data;
+        }
+
+        async function loadPage() {
+            const [config, runtime, startup] = await Promise.all([
+                fetchJson("/api/server-config"),
+                fetchJson("/api/server-runtime?lines=180"),
+                fetchJson("/api/startup-settings").catch(error => ({
+                    isSupported: false,
+                    startAtOsStartup: false,
+                    message: error.message || "Startup settings are not available."
+                }))
+            ]);
+
+            applyConfigFields(config);
+            renderStatus(config, runtime);
+            renderStartupSettings(startup);
+            logConsole.textContent = Array.isArray(runtime.logLines) && runtime.logLines.length
+                ? runtime.logLines.join("\n")
+                : "No log output available yet.";
+            logConsole.scrollTop = logConsole.scrollHeight;
+            logUpdatedAt.textContent = `Updated ${new Date().toLocaleTimeString()}`;
+        }
+
+        function renderStartupSettings(startup) {
+            if (!startup || !startup.isSupported) {
+                startupSection.style.display = "none";
+                startAtOsStartup.disabled = true;
+                startupStatusMessage.textContent = startup?.message || "Startup control is not available.";
+                return;
+            }
+
+            startupSection.style.display = "";
+            startAtOsStartup.disabled = false;
+            startAtOsStartup.checked = !!startup.startAtOsStartup;
+            startupStatusMessage.textContent = startup.message || "Controls whether this server starts automatically.";
+        }
+
+        async function updateStartupSetting(enabled) {
+            startAtOsStartup.disabled = true;
+            startupStatusMessage.textContent = "Updating startup setting...";
+
+            try {
+                const updated = await fetchJson("/api/startup-settings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ startAtOsStartup: enabled })
+                });
+                renderStartupSettings(updated);
+            } catch (error) {
+                startAtOsStartup.checked = !enabled;
+                startupStatusMessage.textContent = error.message || "Could not update startup setting.";
+                startAtOsStartup.disabled = false;
+            }
+        }
+
+        async function checkServerUpdates() {
+            checkServerUpdatesButton.disabled = true;
+            serverUpdateStatus.className = "warn";
+            serverUpdateStatus.textContent = "Checking GitHub for updates...";
+
+            try {
+                const update = await fetchJson("/api/server-update");
+                serverUpdateStatus.className = update.updateAvailable ? "warn" : "ok";
+                const checkedAt = update.checkedAt ? ` Checked ${new Date(update.checkedAt).toLocaleTimeString()}.` : "";
+                serverUpdateStatus.innerHTML = `${update.statusMessage || "Update check completed."}${checkedAt}`;
+            } catch (error) {
+                serverUpdateStatus.className = "warn";
+                serverUpdateStatus.textContent = error.message || "Unable to check for server updates.";
+            } finally {
+                checkServerUpdatesButton.disabled = false;
+            }
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            setMessage("Saving configuration...", "");
+
+            const payload = getPayload();
+            const response = await fetch("/api/server-config", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                setMessage(data.error || "Could not save server configuration.", "error");
+                return;
+            }
+
+            setMessage((data.message || "Saved server configuration.") + (data.primaryAccessUrl ? ` Client access: ${data.primaryAccessUrl}.` : ""), "success");
+            setTimeout(() => {
+                loadPage().catch(error => setMessage(error.message || "Could not refresh server page.", "error"));
+            }, 400);
+        });
+
+        createDatabaseButton.addEventListener("click", async () => {
+            const payload = getPayload();
+            setMessage("Creating a new database from the blank template...", "");
+
+            const response = await fetch("/api/server-config/create-database", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                setMessage(data.error || "Could not create the new database.", "error");
+                return;
+            }
+
+            setMessage((data.message || "Created a new database.") + (data.primaryAccessUrl ? ` Client access: ${data.primaryAccessUrl}.` : ""), "success");
+            setTimeout(() => {
+                loadPage().catch(error => setMessage(error.message || "Could not refresh server page.", "error"));
+            }, 400);
+        });
+
+        document.getElementById("refreshButton").addEventListener("click", () => {
+            loadPage().catch(error => setMessage(error.message || "Could not refresh server page.", "error"));
+        });
+
+        checkServerUpdatesButton.addEventListener("click", () => {
+            checkServerUpdates();
+        });
+
+        startAtOsStartup.addEventListener("change", () => {
+            updateStartupSetting(startAtOsStartup.checked);
+        });
+
+        loadPage().catch(error => setMessage(error.message || "Could not load server page.", "error"));
+        window.setInterval(() => {
+            loadPage().catch(() => {});
+        }, 4000);
+    </script>
+</body>
+</html>
