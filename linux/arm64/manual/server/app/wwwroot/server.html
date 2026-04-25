@@ -443,6 +443,14 @@
             return `<a class="link" href="${url}" target="_blank" rel="noreferrer">${url}</a>`;
         }
 
+        function asLinkList(urls, emptyText = "Unavailable") {
+            if (!Array.isArray(urls) || !urls.length) {
+                return emptyText;
+            }
+
+            return urls.map(url => `<a class="link" href="${url}" target="_blank" rel="noreferrer">${url}</a>`).join("<br>");
+        }
+
         function updateDatabaseOptions(data) {
             const databases = Array.isArray(data?.databases) ? data.databases : [];
             const currentPath = data?.databasePath || "";
@@ -507,6 +515,8 @@
                 ["Current Database", data.databasePath || "(none configured)", !!data.databasePath],
                 ["Server Version", runtime?.serverVersion || "Unavailable", !!runtime?.serverVersion],
                 ["Primary Access", asLink(data.primaryAccessUrl), !!data.primaryAccessUrl, true],
+                ["Local Network", asLinkList(data.localAccessUrls, "Unavailable"), Array.isArray(data.localAccessUrls) && data.localAccessUrls.length > 0, true],
+                ["VPN / Tailscale", asLinkList(data.vpnAccessUrls, "None detected"), true, true],
                 ["Server Page", asLink(data.setupUrl), !!data.setupUrl, true],
                 ["Client Installation", '<a class="link" href="https://github.com/cbrzilla/JC_Budgeting_Client" target="_blank" rel="noreferrer">https://github.com/cbrzilla/JC_Budgeting_Client</a>', true, true],
                 ["Server Bind URL", data.urls || "n/a", true],
@@ -628,8 +638,21 @@
         });
 
         createDatabaseButton.addEventListener("click", async () => {
+            const requestedName = window.prompt("What would you like to name the new database file?", "new_budget_database");
+            if (requestedName === null) {
+                setMessage("Create new database was cancelled.", "");
+                return;
+            }
+
+            const trimmedName = requestedName.trim();
+            if (!trimmedName) {
+                setMessage("Please enter a database file name.", "error");
+                return;
+            }
+
             const payload = getPayload();
-            setMessage("Creating a new database from the blank template...", "");
+            payload.databasePath = trimmedName;
+            setMessage(`Creating "${trimmedName}" from the blank template...`, "");
 
             const response = await fetch("/api/server-config/create-database", {
                 method: "POST",
