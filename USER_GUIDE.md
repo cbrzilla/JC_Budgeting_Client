@@ -14,7 +14,7 @@ Main capabilities include:
 - working locally, through a local server, or through an external JC Server
 - continuing from an offline cache if a server becomes temporarily unavailable
 
-  [![Watch the video](https://img.youtube.com/vi/zbjzAUdrEmU/0.jpg)](https://youtu.be/zbjzAUdrEmU)
+  [![Watch the video]](https://youtu.be/zbjzAUdrEmU)
 
 
 ## Main Areas Of The Program
