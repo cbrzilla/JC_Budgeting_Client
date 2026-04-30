@@ -14,7 +14,6 @@ Main capabilities include:
 - working locally, through a local server, or through an external JC Server
 - continuing from an offline cache if a server becomes temporarily unavailable
 
-
 <p align="left">
   <a href="https://www.youtube.com/watch?v=zbjzAUdrEmU" target="_blank">
     Watch the Intro to JC Budgeting Video<br>
