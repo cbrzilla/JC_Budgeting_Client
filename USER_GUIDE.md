@@ -14,8 +14,13 @@ Main capabilities include:
 - working locally, through a local server, or through an external JC Server
 - continuing from an offline cache if a server becomes temporarily unavailable
 
-  [[Watch the tutorial video]](https://youtu.be/zbjzAUdrEmU)
 
+<p align="left">
+  <a href="https://www.youtube.com/watch?v=zbjzAUdrEmU" target="_blank">
+    Watch the Intro to JC Budgeting Video<br>
+    <img src="https://img.youtube.com/vi/zbjzAUdrEmU/maxresdefault.jpg" alt="Watch the Intro to JC Budgeting video" width="300"/>
+  </a>
+</p>
 
 ## Main Areas Of The Program
 The desktop app is organized into these main tabs:
