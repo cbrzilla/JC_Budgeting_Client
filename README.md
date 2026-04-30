@@ -7,6 +7,13 @@ JC Budgeting can be used in two main ways:
 - Local desktop use, where the data stays on the same computer
 - Client/server use, where the separate JC Budgeting Server hosts the database for other devices or computers
 
+<p align="left">
+  <a href="https://www.youtube.com/watch?v=zbjzAUdrEmU" target="_blank">
+    Watch the Intro to JC Budgeting Video<br>
+    <img src="https://img.youtube.com/vi/zbjzAUdrEmU/maxresdefault.jpg" alt="Watch the Intro to JC Budgeting video" width="300"/>
+  </a>
+</p>
+
 This repo is structured to stay simple for end users: the downloadable app files live in the `releases/` folder, and the GitHub Releases page is the recommended place to download them.
 
 ## Recommended Download Method
