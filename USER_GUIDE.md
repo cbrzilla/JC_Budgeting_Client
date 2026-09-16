@@ -14,13 +14,6 @@ Main capabilities include:
 - working locally, through a local server, or through an external JC Server
 - continuing from an offline cache if a server becomes temporarily unavailable
 
-<p align="left">
-  <a href="https://www.youtube.com/watch?v=zbjzAUdrEmU" target="_blank">
-    Watch the Intro to JC Budgeting Video<br>
-    <img src="https://img.youtube.com/vi/zbjzAUdrEmU/maxresdefault.jpg" alt="Watch the Intro to JC Budgeting video" width="300"/>
-  </a>
-</p>
-
 ## Main Areas Of The Program
 The desktop app is organized into these main tabs:
 
@@ -397,6 +390,12 @@ Main features include:
 - assigning transactions to one or more budget items
 - using quick assign where supported
 - tracking split assignments clearly
+
+Use `Only Show Unlinked` to focus on transactions without a budget assignment. Save or discard any current edits before changing this filter.
+
+Select multiple rows with Ctrl-click (Command-click on macOS) or Shift-click, choose a budget item in the assignment panel, and click `Apply to Selected`. This replaces each selected transaction's existing assignments with its full amount assigned to that item.
+
+Imports and bulk assignments save together and refresh the transaction grid once. Update both the desktop client and JC Budgeting Server to use bulk operations with a server. If a batch fails during saving, none of that batch is committed. If saving succeeds but the following refresh fails, refresh the list before trying again.
 
 Important import note:
 

@@ -40,7 +40,6 @@ jobs:
         with:
           tag_name: ${{ steps.release_tag.outputs.tag }}
           files: |
-            releases/*.zip
             releases/*.tar.gz
           fail_on_unmatched_files: true
           append_body: false
